@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout | Farm2Market</title>
+  <style>
+    /* Same styles as before */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      color: #4CAF50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .cart-items {
+      margin-bottom: 25px;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    .form-section {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #total {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    #place-order {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #place-order:hover {
+      background-color: #45a049;
+    }
+
+    #details-button {
+      margin-top: 20px;
+      background-color: #f39c12;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #details-button:hover {
+      background-color: #e67e22;
+    }
+
+    /* Container for Confirmation Message */
+    .order-confirmation-container {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+
+    .order-confirmation-container h4 {
+      margin-top: 0;
+    }
+
+    .order-confirmation-container p {
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Checkout</h2>
+
+    <!-- Selected Cart Items -->
+    <div class="cart-items" id="cart-items">
+      <!-- Items will be loaded here -->
+    </div>
+
+    <!-- Total Price -->
+    <div id="total">Total: ₹0</div>
+
+    <!-- Delivery Address -->
+    <div class="form-section">
+      <h3>Delivery Address</h3>
+      <label for="house-number">House Number</label>
+      <input type="text" id="house-number" placeholder="Enter house number" required />
+
+      <label for="street">Street Name</label>
+      <input type="text" id="street" placeholder="Enter street name" required />
+
+      <label for="city">City</label>
+      <input type="text" id="city" placeholder="Enter city name" required />
+
+      <label for="state">State</label>
+      <input type="text" id="state" placeholder="Enter state name" required />
+
+      <label for="postal-code">Postal Code</label>
+      <input type="text" id="postal-code" placeholder="Enter postal code" required />
+
+      <label for="address">Full Address</label>
+      <textarea id="address" rows="4" placeholder="Address for delivery (Optional)"></textarea>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="form-section">
+      <h3>Payment Method</h3>
+      <label for="payment">Choose Payment Option</label>
+      <select id="payment">
+        <option value="cod">Cash on Delivery</option>
+        <option value="upi">UPI</option>
+        <option value="razorpay">Razorpay</option>
+        <option value="phonepe">PhonePe</option>
+      </select>
+    </div>
+
+    <button id="place-order">Place Order</button>
+    <button id="details-button">Details</button> <!-- Added Details Button -->
+
+    <!-- Order Confirmation Container -->
+    <div class="order-confirmation-container" id="order-confirmation">
+      <h4>Confirm your Order</h4>
+      <p><strong>Address:</strong> <span id="order-address"></span></p>
+      <p><strong>Payment Method:</strong> <span id="order-payment"></span></p>
+      <button id="confirm-order">Confirm Order</button>
+    </div>
+  </div>
+
+  <!-- Razorpay Checkout -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalDisplay = document.getElementById('total');
+    let total = 0;
+
+    if (cartItems.length === 0) {
+      cartItemsContainer.innerHTML = "<p>No items in the cart.</p>";
+    } else {
+      cartItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "item";
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        div.innerHTML = `
+          <span>${item.name} x ${item.quantity}</span>
+          <span>₹${subtotal}</span>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+      totalDisplay.textContent = `Total: ₹${total}`;
+    }
+
+    document.getElementById("place-order").addEventListener("click", () => {
+      const houseNumber = document.getElementById("house-number").value.trim();
+      const street = document.getElementById("street").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const state = document.getElementById("state").value.trim();
+      const postalCode = document.getElementById("postal-code").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const payment = document.getElementById("payment").value;
+
+      if (!houseNumber || !street || !city || !state || !postalCode) {
+        alert("Please fill in all required address fields.");
+        return;
+      }
+
+      const fullAddress = `${houseNumber}, ${street}, ${city}, ${state} - ${postalCode}. ${address}`;
+
+      // Display confirmation container
+      document.getElementById('order-address').textContent = fullAddress;
+      document.getElementById('order-payment').textContent = payment;
+
+      document.getElementById('order-confirmation').style.display = 'block'; // Show the confirmation container
+    });
+
+    document.getElementById("details-button").addEventListener("click", () => {
+      const houseNumber = document.getElementById("house-number").value;
+      const street = document.getElementById("street").value;
+      const city = document.getElementById("city").value;
+      const state = document.getElementById("state").value;
+      const postalCode = document.getElementById("postal-code").value;
+      const payment = document.getElementById("payment").value;
+
+      alert(`Order Details:\n\nAddress: ${houseNumber}, ${street}, ${city}, ${state}, ${postalCode}\nPayment: ${payment}`);
+    });
+
+    document.getElementById('confirm-order').addEventListener('click', () => {
+      // Redirect to another page after confirming the order
+      window.location.href = 'order-confirmation.html'; // Redirect to the confirmation page
+    });
+  </script>
+
+</body>
+</html>

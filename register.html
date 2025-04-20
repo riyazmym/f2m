@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register | Farm2Market</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('images.f2m/farm-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.95);
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      width: 150px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #4CAF50;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .name-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .half {
+      flex: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Registration Form -->
+  <div class="container">
+    <div class="logo">
+      <img src="images.f2m/logo.png" alt="Farm2Market Logo">
+    </div>
+
+    <h2>Register to Farm2Market</h2>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+      </div>
+
+      <div class="name-row">
+        <div class="form-group half">
+          <label for="middleName">Middle Name <small>(Optional)</small></label>
+          <input type="text" id="middleName" name="middleName">
+        </div>
+        <div class="form-group half">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" required>
+      </div>
+
+      <div class="form-group">
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" required>
+      </div>
+
+      <div class="form-group">
+        <label for="pincode">Pin Code</label>
+        <input type="text" id="pincode" name="pincode" required>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Are you a Seller or Buyer?</label>
+        <select id="type" name="type" required>
+          <option value="">-- Select --</option>
+          <option value="seller">Seller</option>
+          <option value="buyer">Buyer</option>
+        </select>
+      </div>
+
+      <div id="sellerFields" class="hidden">
+        <div class="form-group">
+          <label for="cropType">Crop Type</label>
+          <input type="text" id="cropType" name="cropType">
+        </div>
+        <div class="form-group">
+          <label for="cropPrice">Price (₹ per kg)</label>
+          <input type="number" id="cropPrice" name="cropPrice">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}">
+      </div>
+
+      <div class="form-group">
+        <label for="gmail">Gmail</label>
+        <input type="email" id="gmail" name="gmail" required>
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <!-- JS Section -->
+  <script>
+    const userType = document.getElementById("type");
+    const sellerFields = document.getElementById("sellerFields");
+
+    userType.addEventListener("change", () => {
+      sellerFields.classList.toggle("hidden", userType.value !== "seller");
+    });
+
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      window.location.href = "home.html";
+    });
+  </script>
+
+</body>
+</html>

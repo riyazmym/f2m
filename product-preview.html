@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Preview - Farm2Market</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f3;
+      padding: 30px;
+      margin: 0;
+    }
+    .preview {
+      max-width: 750px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    h2, h3 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 20px;
+    }
+    .product {
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .product img {
+      display: block;
+      max-width: 100%;
+      margin: 10px auto;
+      border-radius: 8px;
+      height: auto;
+    }
+    .product p {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+    .product span {
+      font-weight: bold;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .buttons a {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .buttons a.home {
+      background-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview">
+    <h2>Product Submitted Successfully!</h2>
+    <div id="productDetails" class="product"></div>
+
+    <h3>Previously Sold Products</h3>
+    <div id="previousProducts"></div>
+
+    <div class="buttons">
+      <a href="farmers.html">Submit Another Product</a>
+      <a href="home.html" class="home">Go to Home Page</a>
+    </div>
+  </div>
+
+  <script>
+    // Load current submitted product
+    const product = JSON.parse(localStorage.getItem('submittedProduct'));
+    if (product) {
+      document.getElementById('productDetails').innerHTML = `
+        <img src="images.f2m/${product.image}" alt="Product Image" />
+        <p><span>Farmer Name:</span> ${product.farmerName}</p>
+        <p><span>Product Name:</span> ${product.productName}</p>
+        <p><span>Price:</span> ₹${product.price}</p>
+        <p><span>Quantity:</span> ${product.quantity}</p>
+        <p><span>Location:</span> ${product.location}</p>
+        <p><span>Description:</span> ${product.description || "N/A"}</p>
+      `;
+    } else {
+      document.getElementById('productDetails').innerHTML = `<p>No product submitted.</p>`;
+    }
+
+    // Predefined previously sold products with local images in images.f2m
+    const previouslySoldProducts = [
+      {
+        farmerName: "Shaik Riyaz",
+        productName: "Rice",
+        price: 50,
+        quantity: "100 kg",
+        location: "Mylavaram",
+        description: "Premium quality paddy rice directly from field.",
+        image: "rice.jpg"
+      },
+      {
+        farmerName: "Shaik Riyaz",
+        productName: "Sugarcane",
+        price: 30,
+        quantity: "200 sticks",
+        location: "Mylavaram",
+        description: "Fresh and juicy sugarcane for processing and juice.",
+        image: "sugarcane.jpg"
+      },
+      {
+        farmerName: "Shaik Riyaz",
+        productName: "Mango",
+        price: 80,
+        quantity: "50 kg",
+        location: "Mylavaram",
+        description: "Sweet Banginapalli mangoes - seasonal favorite.",
+        image: "mango.jpg"
+      },
+      {
+        farmerName: "Shaik Riyaz",
+        productName: "Tomato",
+        price: 25,
+        quantity: "70 kg",
+        location: "Mylavaram",
+        description: "Red ripe tomatoes ready for cooking or selling.",
+        image: "tomato.jpg"
+      }
+    ];
+
+    // Display previously sold products
+    const previousContainer = document.getElementById('previousProducts');
+    previouslySoldProducts.forEach(p => {
+      previousContainer.innerHTML += `
+        <div class="product">
+          <img src="images.f2m/${p.image}" alt="${p.productName}" />
+          <p><span>Farmer Name:</span> ${p.farmerName}</p>
+          <p><span>Product Name:</span> ${p.productName}</p>
+          <p><span>Price:</span> ₹${p.price}</p>
+          <p><span>Quantity:</span> ${p.quantity}</p>
+          <p><span>Location:</span> ${p.location}</p>
+          <p><span>Description:</span> ${p.description}</p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
